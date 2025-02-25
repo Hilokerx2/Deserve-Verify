@@ -1,5 +1,9 @@
+import os
 import discord
 from discord.ext import commands
+from discord import app_commands
+
+from myserver import server_on
 
 # กำหนดชื่อที่อนุญาต
 allowed_names = ["Shiro", "ชื่อ2", "ชื่อ3"]
@@ -31,5 +35,7 @@ async def Check(ctx):
     name = user_names.get(user_id, "คุณยังไม่ได้ตั้งชื่อ")
     await ctx.send(f"ชื่อของคุณคือ: {name}")
 
+
+server_on()
 # ใส่ Token ของบอทที่นี่
-bot.run('MTM0Mzg4ODA3NDE3Nzc3MzU2OA.GPUNdv.WNiFP0V1YrzWy7BU-BoYN8o-1V95Su19Sxkzr0')
+bot.run(os.getenv('TOKEN'))
