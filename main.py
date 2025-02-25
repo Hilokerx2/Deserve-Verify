@@ -5,37 +5,46 @@ from discord import app_commands
 
 from myserver import server_on
 
-# กำหนดชื่อที่อนุญาต
-allowed_names = ["Shiro", "Marie"]
-user_names = {}  # เก็บชื่อผู้ใช้และชื่อที่เลือก
+bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
-# สร้างบอท
-bot = commands.Bot(command_prefix="!")
 
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user}")
+    print(f'Logged in as {bot.user}!')
+
+# คำสั่ง chatbot
+@bot.event
+async def on_message(message):
+    mes = message.content # ดึงข้อความที่ถูกส่งมา
+    if mes == 'hello':
+        await message.channel.send("Hello It's me") # ส่งกลับไปที่ห้องนั่น
+
+
+# รายการชื่อที่กำหนดไว้
+allowed_names = ["Shiro", "Marie"]  # เปลี่ยนเป็นชื่อที่ต้องการ
+registered_names = {}
 
 @bot.command()
-async def Verifys(ctx, *, name: str):
-    user_id = ctx.author.id  # รหัสผู้ใช้ Discord ของคนที่เรียกใช้คำสั่ง
+async def register(ctx, name: str):
+    user_id = ctx.author.id
+
+    # ตรวจสอบว่าผู้ใช้ได้ลงทะเบียนแล้วหรือยัง
+    if user_id in registered_names:
+        await ctx.send(f'คุณได้ลงทะเบียนชื่อ "{registered_names[user_id]}" เรียบร้อยแล้ว!')
+        return
+
+    # ตรวจสอบว่าชื่อถูกใช้แล้วหรือยัง
+    if name in registered_names.values():
+        await ctx.send(f'ชื่อ "{name}" ถูกใช้ไปแล้ว! กรุณาเลือกชื่ออื่น.')
+        return
 
     if name in allowed_names:
-        if name in user_names.values():
-            await ctx.send("ชื่อนี้ถูกใช้ไปแล้ว กรุณาเลือกชื่ออื่น.")
-        else:
-            user_names[user_id] = name
-            await ctx.send(f"คุณได้ตั้งชื่อเป็น: {name}")
+        registered_names[user_id] = name
+        await ctx.send(f'คุณได้ลงทะเบียนชื่อ "{name}" เรียบร้อยแล้ว!')
     else:
-        await ctx.send("ชื่อที่คุณใส่ไม่ถูกต้อง กรุณาใช้ชื่อที่กำหนดไว้")
-
-@bot.command()
-async def Check(ctx):
-    user_id = ctx.author.id
-    name = user_names.get(user_id, "คุณยังไม่ได้ตั้งชื่อ")
-    await ctx.send(f"ชื่อของคุณคือ: {name}")
+        await ctx.send(f'ชื่อ "{name}" ไม่ถูกต้อง! กรุณาใช้ชื่อที่กำหนดไว้.')
 
 
 server_on()
-# ใส่ Token ของบอทที่นี่
+
 bot.run(os.getenv('TOKEN'))
