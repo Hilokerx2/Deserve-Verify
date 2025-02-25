@@ -1,15 +1,16 @@
-from flask import Flask
-from threading import Thread
+from flask import Flask, jsonify
 
-app = Flask('')
+app = Flask(__name__)
 
+# เส้นทางหลัก
 @app.route('/')
 def home():
-    return "Server is running!"
+    return "Welcome to the Flask server!"
 
-def run()
-    app.run(host='0.0.0.0',port=8080)
-
+# เส้นทาง server_on
+@app.route('/server_on')
 def server_on():
-    t = Thread(target=run)
-    t.start()
+    return jsonify({"status": "Server is running!"})
+
+if __name__ == '__main__':
+    app.run(debug=True)
