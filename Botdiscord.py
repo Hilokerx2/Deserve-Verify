@@ -6,7 +6,7 @@ from discord import app_commands
 from myserver import server_on
 
 # กำหนดชื่อที่อนุญาต
-allowed_names = ["Shiro", "ชื่อ2", "ชื่อ3"]
+allowed_names = ["Shiro", "Marie"]
 user_names = {}  # เก็บชื่อผู้ใช้และชื่อที่เลือก
 
 # สร้างบอท
